@@ -5,6 +5,9 @@ from app.core.config import settings
 from app.db.session import engine
 from sqlmodel import SQLModel
 from app.api.v1.endpoints import users, transactions
+from app.core.errors import custom_http_exception_handler, custom_validation_exception_handler, global_exception_handler
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
@@ -13,6 +16,10 @@ app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json"
 )
+
+app.add_exception_handler(StarletteHTTPException, custom_http_exception_handler)
+app.add_exception_handler(RequestValidationError, custom_validation_exception_handler)
+app.add_exception_handler(Exception, global_exception_handler)
 
 # Set all CORS enabled origins
 app.add_middleware(
