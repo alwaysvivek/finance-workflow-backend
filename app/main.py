@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.db.session import engine
 from sqlmodel import SQLModel
-from app.api.v1.endpoints import users
+from app.api.v1.endpoints import users, transactions
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
@@ -29,3 +29,4 @@ def on_startup():
     
 # Included routers
 app.include_router(users.router, prefix=f"{settings.API_V1_STR}", tags=["users"])
+app.include_router(transactions.router, prefix=f"{settings.API_V1_STR}/transactions", tags=["transactions"])
