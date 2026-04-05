@@ -4,7 +4,7 @@ from typing import List, Any, Optional
 
 from app.db.session import get_session
 from app.models.models import User, RoleEnum, Transaction, StatusEnum, TransactionTypeEnum
-from app.schemas.schemas import TransactionCreate, TransactionResponse, StandardResponse
+from app.schemas.schemas import TransactionCreate, TransactionUpdate, TransactionResponse, StandardResponse
 from app.api.deps import get_current_active_user, get_role_checker
 from app.services.transaction_service import TransactionService
 
@@ -65,6 +65,20 @@ def get_transaction(
     tx = db.get(Transaction, transaction_id)
     if not tx or tx.company_id != current_user.company_id or tx.deleted_at is not None:
         raise HTTPException(status_code=404, detail="Transaction not found")
+    return {"data": tx, "meta": {}}
+
+@router.put("/{transaction_id}", response_model=StandardResponse[TransactionResponse])
+def update_transaction(
+    transaction_id: int,
+    *,
+    db: Session = Depends(get_session),
+    transaction_in: TransactionUpdate,
+    current_user: User = Depends(get_role_checker([RoleEnum.ADMIN, RoleEnum.ANALYST]))
+) -> Any:
+    """
+    Update a pending transaction. (Admin, Analyst)
+    """
+    tx = TransactionService.update_transaction(db, transaction_id, transaction_in, current_user)
     return {"data": tx, "meta": {}}
 
 @router.put("/{transaction_id}/approve", response_model=StandardResponse[TransactionResponse])

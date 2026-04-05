@@ -55,6 +55,27 @@ class TransactionCreate(BaseModel):
             raise ValueError("date cannot be in the future")
         return v
 
+class TransactionUpdate(BaseModel):
+    amount: Optional[Decimal] = None
+    type: Optional[TransactionTypeEnum] = None
+    category: Optional[str] = None
+    date: Optional[datetime] = None
+    notes: Optional[str] = None
+
+    @field_validator("amount")
+    @classmethod
+    def amount_must_be_positive(cls, v):
+        if v is not None and v <= 0:
+            raise ValueError("amount must be greater than 0")
+        return v
+
+    @field_validator("date")
+    @classmethod
+    def date_not_in_future(cls, v):
+        if v is not None and v.replace(tzinfo=None) > datetime.utcnow():
+            raise ValueError("date cannot be in the future")
+        return v
+
 class TransactionResponse(BaseModel):
     id: int
     amount: Decimal
