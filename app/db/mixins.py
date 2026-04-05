@@ -1,6 +1,6 @@
 from sqlmodel import Field
 from datetime import datetime, timezone
-from typing import Optional
+
 
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
