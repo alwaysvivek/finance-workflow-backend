@@ -1,5 +1,12 @@
 # Multi-Tenant Financial Workflow Backend
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Render-brightgreen)](https://finance-workflow-backend.onrender.com/docs)
+
+> [!NOTE]
+> **Live Demo**: [https://finance-workflow-backend.onrender.com/docs](https://finance-workflow-backend.onrender.com/docs)
+>
+> *Please note: This is hosted on Render's free tier. The service automatically goes to sleep after 15 minutes of inactivity. The first request may take ~30 seconds to spin up.*
+
 A production-grade, multi-tenant financial record backend built using FastAPI, SQLModel, and specialized multi-tier RBAC architecture.
 
 ## How to Run
